@@ -4,10 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
 var app = express();
+let ids = []
+let blob = {id: 0, data: {}, received: []}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,8 +18,24 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.post('/publish', (req, res) => {
+  req = req.body
+  blob.data = req.data
+  blob.id = req.id
+  res.send({success: true})
+})
+
+const getData = async (id) => {
+  //await blob.data change
+  blob.received.push(id)
+  return data
+}
+
+app.post('/subscribe', async (req, res) => {
+  ids.push(req.id)
+  data = await getData(req.id)
+  res.send(data)
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
