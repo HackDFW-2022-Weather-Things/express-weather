@@ -31,13 +31,13 @@ on:
     branches: [ "main" ]
 
 env:
-  AWS_REGION: MY_AWS_REGION                   us-east-1
-  ECR_REPOSITORY: MY_ECR_REPOSITORY           express-weather
-  ECS_SERVICE: MY_ECS_SERVICE                 express-weather-service
-  ECS_CLUSTER: MY_ECS_CLUSTER                 express-weather
-  ECS_TASK_DEFINITION: MY_ECS_TASK_DEFINITION express-weather-task-def
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: express-weather
+  ECS_SERVICE: express-weather-service
+  ECS_CLUSTER: express-weather
+  ECS_TASK_DEFINITION: task-def.json
                                                # file, e.g. .aws/task-definition.json
-  CONTAINER_NAME: MY_CONTAINER_NAME           express-weather
+  CONTAINER_NAME: express-weather
 
 permissions:
   contents: read
