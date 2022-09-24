@@ -6,11 +6,8 @@ var logger = require('morgan');
 
 var app = express();
 let ids = []
-let blob = {id: 0, data: {}, received: []}
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+let initial_state = {id: 0, data: {}, received: []}
+let blob = {...initial_state}
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -19,22 +16,30 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/publish', (req, res) => {
-  req = req.body
-  blob.data = req.data
-  blob.id = req.id
-  res.send({success: true})
+  let body = req.body
+  blob.data = body.data
+  blob.id = body.id
+  blob.received = []
+  res.send({success: true, sender: blob.id})
 })
 
-const getData = async (id) => {
-  //await blob.data change
-  blob.received.push(id)
-  return data
-}
+app.post('/subscribe', (req, res) => {
+  let body = req.body
+  console.log(body)
+  if (!ids.includes(body.id)) {
+    ids.push(body.id)
+  }
 
-app.post('/subscribe', async (req, res) => {
-  ids.push(req.id)
-  data = await getData(req.id)
-  res.send(data)
+  if (!blob.received.includes(body.id)) {
+    blob.received.push(body.id)
+  }
+
+  if (blob.received.length == ids.length) {
+    console.log("TRIGG")
+    blob = {...initial_state}
+  }
+
+  res.send({"ids": ids, "blob": blob})
 })
 
 // catch 404 and forward to error handler
