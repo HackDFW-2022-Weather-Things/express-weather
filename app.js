@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var app = express();
-let ids = []
+let registered_ids = []
 let initial_state = {id: 0, data: {}, received: []}
 let blob = {...initial_state}
 
@@ -20,26 +20,31 @@ app.post('/publish', (req, res) => {
   blob.data = body.data
   blob.id = body.id
   blob.received = []
-  res.send({success: true, sender: blob.id})
+  res.send({success: true, blob: blob})
+})
+
+app.post('/register', (req, res) => {
+  let body = req.body
+  if (!registered_ids.includes(body.id)) {
+    registered_ids.push(body.id)
+  }
+  res.send({"registered_ids": registered_ids})
 })
 
 app.post('/subscribe', (req, res) => {
   let body = req.body
   console.log(body)
-  if (!ids.includes(body.id)) {
-    ids.push(body.id)
-  }
 
   if (!blob.received.includes(body.id)) {
     blob.received.push(body.id)
   }
 
-  if (blob.received.length == ids.length) {
+  if (blob.received.length == registered_ids.length) {
     console.log("TRIGG")
     blob = {...initial_state}
   }
 
-  res.send({"ids": ids, "blob": blob})
+  res.send({"registered_ids": registered_ids, "blob": blob})
 })
 
 // catch 404 and forward to error handler
