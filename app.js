@@ -20,6 +20,7 @@ app.post('/publish', (req, res) => {
   blob.data = body.data
   blob.id = body.id
   blob.received = []
+
   res.send({success: true, blob: blob})
 })
 
@@ -37,6 +38,7 @@ app.post('/subscribe', (req, res) => {
 
   if (!blob.received.includes(body.id)) {
     blob.received.push(body.id)
+    res.send({"blob": blob})
   }
 
   if (blob.received.length == registered_ids.length) {
@@ -44,7 +46,7 @@ app.post('/subscribe', (req, res) => {
     blob = {...initial_state}
   }
 
-  res.send({"registered_ids": registered_ids, "blob": blob})
+  res.send({"blob": false})
 })
 
 // catch 404 and forward to error handler
