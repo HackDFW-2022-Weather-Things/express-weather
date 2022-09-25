@@ -38,7 +38,7 @@ app.post('/subscribe', (req, res) => {
 
   if (!blob.received.includes(body.id)) {
     blob.received.push(body.id)
-    res.send({"blob": blob})
+    res.send({"blob": blob.data})
   }
 
   if (blob.received.length == registered_ids.length) {
